@@ -131,10 +131,7 @@ export default class Clock extends Component<Props> {
           <Circle center={this.state.center} radius={this.state.redRadius} color='#ff2c00'/>
           <Circle center={this.state.center} radius={this.state.goldRadius} color='#d2b73d'/>
         </Surface>
-        <Text style={[styles.branding, {
-          right: this.props.width,
-          bottom: this.props.height
-        }]}>TIME TIMER ®</Text>
+        <Text style={styles.branding}>TIME TIMER ®</Text>
       </View>
     )
   }
@@ -144,7 +141,9 @@ const styles = StyleSheet.create({
   container: {},
   branding: {
     position: 'absolute',
+    color: '#000000',
     padding: 8,
-    fontSize: 12
+    fontSize: 12,
+    alignSelf: 'flex-end'
   }
 });
