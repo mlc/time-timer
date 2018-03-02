@@ -22,10 +22,9 @@ export default class App extends Component {
     if (ms > 0) {
       const newMs = Math.max(0, expiry - now());
       this.setState({ms: newMs, expiry: expiry});
-      if (this.alarm != null) {
+      if (newMs <= 0 && this.alarm != null) {
         this.alarm.play((success) => {
           console.log("sound completed", success);
-          this.alarm.reset();
         });
       }
     }
