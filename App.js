@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 import Clock from './Clock';
+import Sound from 'react-native-sound';
 
 function now(): Number {
   return (new Date()).getTime();
@@ -8,6 +9,7 @@ function now(): Number {
 
 export default class App extends Component {
   intervalId = 0;
+  alarm = null;
 
   state = {
     ms: 0,
@@ -20,6 +22,12 @@ export default class App extends Component {
     if (ms > 0) {
       const newMs = Math.max(0, expiry - now());
       this.setState({ms: newMs, expiry: expiry});
+      if (this.alarm != null) {
+        this.alarm.play((success) => {
+          console.log("sound completed", success);
+          this.alarm.reset();
+        });
+      }
     }
   }
 
@@ -33,6 +41,12 @@ export default class App extends Component {
 
   componentWillMount() {
     this.intervalId = setInterval(this.onInterval.bind(this), 500);
+    Sound.setCategory('Ambient');
+    this.alarm = new Sound('analog_watch_alarm.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.error(error);
+      }
+    });
   }
 
   componentWillUnmount() {
