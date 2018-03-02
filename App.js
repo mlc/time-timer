@@ -2,19 +2,41 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 import Clock from './Clock';
 
+function now(): Number {
+  return (new Date()).getTime();
+}
+
 export default class App extends Component {
+  intervalId = 0;
+
   state = {
     ms: 0,
     expiry: 0
   };
 
+  onInterval() {
+    const { ms, expiry } = this.state;
+
+    if (ms > 0) {
+      const newMs = Math.max(0, expiry - now());
+      this.setState({ms: newMs, expiry: expiry});
+    }
+  }
+
   onMinutes(min) {
     const oldMs = this.state.ms;
     const newMs = min * 60000;
-    console.log(oldMs, newMs, Math.abs(oldMs - newMs));
     if (oldMs <= 0 || Math.abs(oldMs - newMs) < 60000 * 50) {
-      this.setState({ms: newMs, expiry: new Date() + newMs});
+      this.setState({ms: newMs, expiry: now() + newMs});
     }
+  }
+
+  componentWillMount() {
+    this.intervalId = setInterval(this.onInterval.bind(this), 500);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
 
   render() {
